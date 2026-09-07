@@ -24,6 +24,8 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     private int mCurrentPage = 0;
     private boolean mHasMore = true;
     private boolean mLoading = false;
+    /** 请求进行中筛选条件又变化时，置位以在本次结束后按最新条件重载 */
+    private boolean mRefreshQueued = false;
 
     public HomePresenter() {
         this.mRepository = new ProductRepository();
@@ -73,6 +75,8 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
     @Override
     public void refresh() {
         if (mLoading) {
+            // 上一次请求未结束：不丢需求，结束后用最新条件再刷一次
+            mRefreshQueued = true;
             return;
         }
         mLoading = true;
@@ -95,6 +99,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     @Override
                     public void onSuccess(ProductPage data) {
                         mLoading = false;
+                        // 过期结果：请求期间条件已被更新，丢弃并立即按最新条件重载
+                        if (mRefreshQueued) {
+                            mRefreshQueued = false;
+                            refresh();
+                            return;
+                        }
                         if (data == null || data.getList() == null) {
                             mHasMore = false;
                             return;
@@ -112,6 +122,11 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     @Override
                     public void onFailure(String msg) {
                         mLoading = false;
+                        if (mRefreshQueued) {
+                            mRefreshQueued = false;
+                            refresh();
+                            return;
+                        }
                         HomeContract.View v = getView();
                         if (v != null) {
                             v.showError(msg);

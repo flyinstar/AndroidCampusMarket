@@ -117,11 +117,15 @@ public class ProductListActivity extends BaseActivity<HomeContract.View, HomePre
         } else {
             tvTitle.setText("全部商品");
         }
-        mPresenter.setKeyword(mKeyword);
-        if (mCategoryId != null) {
-            mPresenter.setCategory(mCategoryId);
+        // 只触发一次首次加载，且携带真实过滤条件。
+        // 不能先 setKeyword 再 setCategory（两者各自会 refresh，第二次会被
+        // 进行中的请求吞掉，导致分类标签点击无效、永远显示全部商品）。
+        if (mCategoryId != null && mCategoryId != 0) {
+            mPresenter.setCategory(mCategoryId);            // 分类浏览
+        } else if (!TextUtils.isEmpty(mKeyword)) {
+            mPresenter.setKeyword(mKeyword);                // 关键词搜索
         } else {
-            mPresenter.setSort("hot");
+            mPresenter.refresh();                           // 全部商品（默认热门）
         }
     }
 
