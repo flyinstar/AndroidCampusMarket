@@ -49,7 +49,8 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
 
     @Override
     public void setCategory(Integer categoryId) {
-        mCategoryId = categoryId;
+        // 首页快捷栏用 id=0 表示“全部”，0/null 都视为不过滤
+        mCategoryId = (categoryId == null || categoryId == 0) ? null : categoryId;
         refresh();
     }
 

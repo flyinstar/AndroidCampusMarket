@@ -43,6 +43,7 @@ public class HomeFragment extends BaseFragment<HomeContract.View, HomePresenter>
     private CategoryChipAdapter mChipAdapter;
     private ProductAdapter mProductAdapter;
     private boolean mRefreshing = false;
+    private boolean mResumedOnce = false;
 
     @Override
     protected int getLayoutId() {
@@ -160,9 +161,15 @@ public class HomeFragment extends BaseFragment<HomeContract.View, HomePresenter>
     @Override
     public void onResume() {
         super.onResume();
-        // 从详情页返回时刷新（浏览量/收藏可能变化）
-        if (mProductAdapter != null && !mProductAdapter.isEmpty() && mPresenter != null) {
-            mPresenter.refresh();
+        if (mPresenter == null) {
+            return;
         }
+        // onViewCreated 里的 initData 已做首次加载，onResume 首次不再重复；
+        // 之后从发布/详情/其它 Tab 切回时刷新列表（含空列表场景）
+        if (!mResumedOnce) {
+            mResumedOnce = true;
+            return;
+        }
+        mPresenter.refresh();
     }
 }
