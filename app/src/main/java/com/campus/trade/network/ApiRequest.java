@@ -1,9 +1,13 @@
 package com.campus.trade.network;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.campus.trade.app.TradeApplication;
 import com.campus.trade.network.callback.ApiCallback;
+import com.campus.trade.ui.activity.LoginActivity;
+import com.campus.trade.utils.SharedPrefUtils;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -15,7 +19,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 请求执行辅助：异步请求并统一切回主线程回调
+ * 请求执行辅助：异步请求并统一切回主线程回调。
+ * 收到 401（Token 缺失/失效）时自动清除本地登录态并回到登录页。
  */
 public final class ApiRequest {
 
@@ -30,12 +35,18 @@ public final class ApiRequest {
             public void onResponse(Call<BaseResponse<T>> call, Response<BaseResponse<T>> response) {
                 BaseResponse<T> body = response.body();
                 if (body == null) {
+                    if (response.code() == 401) {
+                        forceRelogin();
+                        postFail(callback, "登录已过期，请重新登录");
+                        return;
+                    }
                     String msg = response.isSuccessful()
                             ? "返回数据为空" : "服务器错误(" + response.code() + ")";
                     postFail(callback, msg);
                     return;
                 }
                 if (body.isUnauthorized()) {
+                    forceRelogin();
                     postFail(callback, "登录已过期，请重新登录");
                     return;
                 }
@@ -49,6 +60,29 @@ public final class ApiRequest {
             @Override
             public void onFailure(Call<BaseResponse<T>> call, Throwable t) {
                 postFail(callback, friendlyError(t));
+            }
+        });
+    }
+
+    /**
+     * 401 处理：清除本地 Token/记住密码之外的登录态并跳转登录页。
+     * 多个并发请求同时 401 时也只触发一次导航。
+     */
+    private static boolean sReloginPending = false;
+
+    private static void forceRelogin() {
+        if (sReloginPending) {
+            return;
+        }
+        sReloginPending = true;
+        MAIN.post(() -> {
+            try {
+                SharedPrefUtils.clear(TradeApplication.getContext());
+                Intent intent = new Intent(TradeApplication.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                TradeApplication.getContext().startActivity(intent);
+            } finally {
+                sReloginPending = false;
             }
         });
     }

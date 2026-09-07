@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
+
 /**
  * Web 配置：
  * 1. /images/** 静态资源映射到本地磁盘目录
@@ -23,7 +25,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String dir = uploadDir.endsWith("/") || uploadDir.endsWith("\\") ? uploadDir : uploadDir + "/";
+        // 与 UploadController 一致：归一为绝对路径（相对路径基于服务启动目录）
+        File root = new File(uploadDir).getAbsoluteFile();
+        String dir = root.getPath().replace('\\', '/');
+        if (!dir.endsWith("/")) {
+            dir = dir + "/";
+        }
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + dir);
     }
