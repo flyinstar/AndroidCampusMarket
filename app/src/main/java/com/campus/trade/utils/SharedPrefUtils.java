@@ -14,6 +14,7 @@ public final class SharedPrefUtils {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_REMEMBER = "remember";
     private static final String KEY_USER_ID = "userId";
+    private static final String KEY_SERVER_URL = "serverUrl";
 
     private SharedPrefUtils() {
     }
@@ -67,7 +68,30 @@ public final class SharedPrefUtils {
         return getSP(context).getBoolean(KEY_REMEMBER, false);
     }
 
+    // ========== 服务器地址（自定义后端） ==========
+
+    /** 保存自定义服务器地址；传 null/空串表示清除（回到 App 内置默认地址） */
+    public static void saveServerUrl(Context context, String url) {
+        if (url == null || url.trim().isEmpty()) {
+            getSP(context).edit().remove(KEY_SERVER_URL).apply();
+        } else {
+            getSP(context).edit().putString(KEY_SERVER_URL, url.trim()).apply();
+        }
+    }
+
+    /** 返回自定义服务器地址；未设置时返回 null */
+    public static String getServerUrl(Context context) {
+        return getSP(context).getString(KEY_SERVER_URL, null);
+    }
+
+    /** 退出登录只清账号相关数据；服务器地址属于本机设置，保留不删 */
     public static void clear(Context context) {
-        getSP(context).edit().clear().apply();
+        getSP(context).edit()
+                .remove(KEY_TOKEN)
+                .remove(KEY_EMAIL)
+                .remove(KEY_PASSWORD)
+                .remove(KEY_REMEMBER)
+                .remove(KEY_USER_ID)
+                .apply();
     }
 }

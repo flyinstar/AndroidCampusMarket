@@ -14,6 +14,7 @@ import com.campus.trade.R;
 import com.campus.trade.base.BaseActivity;
 import com.campus.trade.presenter.auth.LoginContract;
 import com.campus.trade.presenter.auth.LoginPresenter;
+import com.campus.trade.utils.ServerConfigDialog;
 
 /**
  * 登录页
@@ -57,6 +58,9 @@ public class LoginActivity extends BaseActivity<LoginContract.View, LoginPresent
         btnLogin.setOnClickListener(v -> doLogin());
         findViewById(R.id.tv_go_register).setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
+        // 未登录也能改服务器（默认地址连不上时可在此先切换）
+        findViewById(R.id.tv_server_settings).setOnClickListener(v ->
+                ServerConfigDialog.show(this, null));
     }
 
     private void doLogin() {
