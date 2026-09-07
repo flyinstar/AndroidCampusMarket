@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 应用基础主题（Material3 无 ActionBar，界面顶部用 Toolbar 自行承载） -->
+    <style name="Base.Theme.CampusMarket" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/primary_light</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:colorBackground">@color/bg_page</item>
+        <item name="colorSurface">@color/card_bg</item>
+        <item name="android:windowBackground">@color/bg_page</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.CampusMarket" parent="Base.Theme.CampusMarket" />
+
+    <!-- 启动页：纯白底 + 居中 Logo，无需状态栏深浅处理 -->
+    <style name="Theme.CampusMarket.Splash" parent="Theme.CampusMarket">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <!-- 页面通用 Toolbar -->
+    <style name="Widget.CampusMarket.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/white</item>
+        <item name="titleTextColor">@color/text_main</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="titleTextAppearance">@style/TextAppearance.CampusMarket.ToolbarTitle</item>
+    </style>
+
+    <style name="TextAppearance.CampusMarket.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_main</item>
+    </style>
+</resources>

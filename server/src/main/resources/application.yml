@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: campus-trade-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:campus_trade}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=30000
+    # 凭据全部来自环境变量（勿在仓库提交真实密码，参考 server/.env.example）
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.campus.trade.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 自定义配置
+app:
+  jwt:
+    # 通过环境变量提供（参考 server/.env.example），未设置时为空密钥，启动前必须配置
+    secret: ${JWT_SECRET:}
+    expiration: 604800000        # 7天（毫秒）
+  file:
+    # 本地图片存储目录。开发默认 server/uploads（相对启动目录）；
+    # 生产建议覆盖为绝对路径，如 /home/ubuntu/uploads/campus-trade/ 或 D:/campus-trade-uploads/
+    upload-dir: ${UPLOAD_DIR:./uploads/}
+    # 图片对外访问地址前缀（与 accessUrl 拼接得到完整图片URL）
+    access-url: ${ACCESS_URL:http://localhost:8080/images/}
+
+logging:
+  level:
+    com.campus.trade: info

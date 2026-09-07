@@ -1,0 +1,58 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.campus.trade'
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.campus.trade"
+        minSdk 23
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            optimization {
+                enable false
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // 基础 UI
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    implementation libs.activity.ktx
+    implementation libs.recyclerview
+    implementation libs.swiperefreshlayout
+
+    // 网络：Retrofit2 + OkHttp3（日志拦截）
+    implementation libs.retrofit
+    implementation libs.retrofit.gson
+    implementation libs.okhttp.logging
+    implementation libs.gson
+
+    // 图片加载：Glide
+    implementation libs.glide
+    annotationProcessor libs.glide.compiler
+
+    testImplementation libs.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.ext.junit
+}

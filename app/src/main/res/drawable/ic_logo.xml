@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 圆角底 -->
+    <path
+        android:fillColor="#4A6CF7"
+        android:pathData="M24,4 h60 a20,20 0 0 1 20,20 v60 a20,20 0 0 1 -20,20 h-60 a20,20 0 0 1 -20,-20 v-60 a20,20 0 0 1 20,-20 z" />
+    <!-- 购物袋 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,26 c-6,0 -10,4.5 -10,10 v2 h-7 v26 a6,6 0 0 0 6,6 h22 a6,6 0 0 0 6,-6 v-26 h-7 v-2 c0,-5.5 -4,-10 -10,-10 z M44,38 v-2 a10,10 0 0 1 20,0 v2 z" />
+    <!-- “闲”字横线装饰用竖短线省略，改用下方两圆点 -->
+    <path android:fillColor="#4A6CF7" android:pathData="M48,58 m-3,0 a3,3 0 1 1 6,0 a3,3 0 1 1 -6,0" />
+    <path android:fillColor="#4A6CF7" android:pathData="M60,58 m-3,0 a3,3 0 1 1 6,0 a3,3 0 1 1 -6,0" />
+</vector>

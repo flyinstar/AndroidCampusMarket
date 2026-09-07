@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.trade.mapper.ProductMapper">
+
+    <!-- 商品联表公共列：发布者昵称头像、分类名、封面图 -->
+    <sql id="productSelect">
+        SELECT p.*,
+               u.nickname  AS seller_name,
+               u.avatar    AS seller_avatar,
+               u.credit_score AS seller_credit,
+               c.name      AS category_name,
+               (SELECT pi.image_url
+                FROM product_image pi
+                WHERE pi.product_id = p.id
+                ORDER BY pi.sort_order ASC, pi.id ASC
+                LIMIT 1)   AS first_image
+        FROM product p
+                 JOIN `user` u ON u.id = p.user_id
+                 LEFT JOIN category c ON c.id = p.category_id
+    </sql>
+
+    <insert id="insert" parameterType="com.campus.trade.entity.Product"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (title, description, price, user_id, category_id,
+                             `condition`, `status`, latitude, longitude)
+        VALUES (#{title}, #{description}, #{price}, #{userId}, #{categoryId},
+                #{condition}, #{status}, #{latitude}, #{longitude})
+    </insert>
+
+    <select id="findById" resultType="com.campus.trade.entity.Product">
+        <include refid="productSelect"/>
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectPage" resultType="com.campus.trade.entity.Product">
+        <include refid="productSelect"/>
+        WHERE p.status = 1
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+              OR p.description LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <choose>
+            <when test="sort == 'new'">
+                ORDER BY p.id DESC
+            </when>
+            <otherwise>
+                ORDER BY p.view_count DESC, p.id DESC
+            </otherwise>
+        </choose>
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="countPage" resultType="long">
+        SELECT COUNT(*) FROM product
+        WHERE status = 1
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (title LIKE CONCAT('%', #{keyword}, '%')
+              OR description LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="selectByUser" resultType="com.campus.trade.entity.Product">
+        <include refid="productSelect"/>
+        WHERE p.user_id = #{userId}
+        <if test="status != null">
+            AND p.status = #{status}
+        </if>
+        ORDER BY p.id DESC
+    </select>
+
+    <select id="selectFavorites" resultType="com.campus.trade.entity.Product">
+        <include refid="productSelect"/>
+        JOIN favorite f ON f.product_id = p.id
+        WHERE f.user_id = #{userId}
+        ORDER BY f.id DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE product SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product WHERE id = #{id}
+    </delete>
+
+    <update id="incrementView">
+        UPDATE product SET view_count = view_count + 1 WHERE id = #{id}
+    </update>
+
+    <update id="addFavoriteCount">
+        UPDATE product SET favorite_count = favorite_count + 1 WHERE id = #{id}
+    </update>
+
+    <update id="subFavoriteCount">
+        UPDATE product SET favorite_count = IF(favorite_count &gt; 0, favorite_count - 1, 0)
+        WHERE id = #{id}
+    </update>
+</mapper>

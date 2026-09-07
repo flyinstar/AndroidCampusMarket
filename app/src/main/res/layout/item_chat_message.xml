@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_hint"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_avatar_left"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_avatar_round"
+            android:contentDescription="头像" />
+
+        <TextView
+            android:id="@+id/tv_bubble_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_bubble_left"
+            android:maxWidth="250dp"
+            android:padding="10dp"
+            android:textColor="@color/text_main"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_bubble_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bubble_right"
+            android:maxWidth="250dp"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_avatar_right"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_avatar_round"
+            android:contentDescription="头像" />
+    </LinearLayout>
+</LinearLayout>

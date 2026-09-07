@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.trade.mapper.MessageMapper">
+
+    <insert id="insert" parameterType="com.campus.trade.entity.ChatMessage"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_message (from_user_id, to_user_id, content, msg_type, is_read, created_at)
+        VALUES (#{fromUserId}, #{toUserId}, #{content}, #{msgType}, #{isRead}, #{createdAt})
+    </insert>
+
+    <!-- 轮询新消息（sinceId 增量拉取） -->
+    <select id="pollNewMessages" resultType="com.campus.trade.entity.ChatMessage">
+        SELECT * FROM chat_message
+        WHERE ((from_user_id = #{userId1} AND to_user_id = #{userId2})
+            OR (from_user_id = #{userId2} AND to_user_id = #{userId1}))
+          AND id &gt; #{sinceId}
+        ORDER BY id ASC
+        LIMIT 50
+    </select>
+
+    <!-- 历史消息（倒序分页，由客户端前插） -->
+    <select id="selectHistory" resultType="com.campus.trade.entity.ChatMessage">
+        SELECT * FROM chat_message
+        WHERE ((from_user_id = #{userId1} AND to_user_id = #{userId2})
+            OR (from_user_id = #{userId2} AND to_user_id = #{userId1}))
+        ORDER BY id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <!-- 未读消息总数 -->
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*) FROM chat_message
+        WHERE to_user_id = #{userId} AND is_read = 0
+    </select>
+
+    <update id="markRead">
+        UPDATE chat_message
+        SET is_read = 1
+        WHERE from_user_id = #{fromUserId}
+          AND to_user_id = #{toUserId}
+          AND is_read = 0
+    </update>
+
+    <!-- 会话列表：找出每个对端最后一条消息 -->
+    <select id="selectConversations" resultType="com.campus.trade.dto.response.ConversationVO">
+        SELECT other.id            AS target_user_id,
+               other.nickname      AS nickname,
+               other.avatar        AS avatar,
+               m.content           AS last_content,
+               m.msg_type          AS last_msg_type,
+               m.created_at        AS last_time
+        FROM chat_message m
+                 JOIN `user` other
+                      ON other.id = IF(m.from_user_id = #{userId}, m.to_user_id, m.from_user_id)
+        WHERE m.id IN (
+            SELECT MAX(id)
+            FROM chat_message
+            WHERE from_user_id = #{userId} OR to_user_id = #{userId}
+            GROUP BY IF(from_user_id = #{userId}, to_user_id, from_user_id)
+        )
+        ORDER BY m.id DESC
+    </select>
+
+    <!-- 每个对端发来的未读数 -->
+    <select id="selectUnreadGroup" resultType="map">
+        SELECT from_user_id AS fromUserId, COUNT(*) AS cnt
+        FROM chat_message
+        WHERE to_user_id = #{userId} AND is_read = 0
+        GROUP BY from_user_id
+    </select>
+</mapper>

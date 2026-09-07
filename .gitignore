@@ -1,0 +1,27 @@
+# ===== IDE / OS =====
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ===== Gradle / Android 构建产物 =====
+.gradle/
+build/
+**/build/
+captures/
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# ===== 本机环境配置（勿上传，含 SDK 路径）=====
+local.properties
+**/local.properties
+
+# ===== Java / 服务端 =====
+*.class
+*.log
+server/target/
+server/uploads/

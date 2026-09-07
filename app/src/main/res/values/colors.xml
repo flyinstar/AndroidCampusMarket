@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- 品牌色 -->
+    <color name="primary">#4A6CF7</color>
+    <color name="primary_dark">#3B56D9</color>
+    <color name="primary_light">#E8EDFF</color>
+    <color name="accent">#FF7A45</color>
+
+    <!-- 背景 / 文本 -->
+    <color name="bg_page">#F5F6FA</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="text_main">#222B45</color>
+    <color name="text_second">#8A94A6</color>
+    <color name="text_hint">#B4BCCC</color>
+    <color name="divider">#EDEFF3</color>
+    <color name="price">#FF4D4F</color>
+    <color name="status_gray">#8A94A6</color>
+    <color name="status_green">#07C160</color>
+    <color name="status_blue">#4A6CF7</color>
+    <color name="status_orange">#FF7A45</color>
+    <color name="placeholder_bg">#E4E8F0</color>
+</resources>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.trade.mapper.OrderMapper">
+
+    <insert id="insert" parameterType="com.campus.trade.entity.OrderInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_info (order_no, product_id, buyer_id, seller_id, amount,
+                                status, remark, meeting_time, meeting_place)
+        VALUES (#{orderNo}, #{productId}, #{buyerId}, #{sellerId}, #{amount},
+                #{status}, #{remark}, #{meetingTime}, #{meetingPlace})
+    </insert>
+
+    <select id="findById" resultType="com.campus.trade.entity.OrderInfo">
+        SELECT * FROM order_info WHERE id = #{id}
+    </select>
+
+    <select id="countActiveByProduct" resultType="int">
+        SELECT COUNT(*) FROM order_info
+        WHERE product_id = #{productId}
+          AND status IN (0, 1)
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
+
+    <select id="countByProduct" resultType="int">
+        SELECT COUNT(*) FROM order_info WHERE product_id = #{productId}
+    </select>
+
+    <!-- 我的订单：联商品标题/封面，根据视角动态给出对方昵称头像 -->
+    <sql id="orderSelect">
+        SELECT o.*,
+               p.title AS product_title,
+               (SELECT pi.image_url
+                FROM product_image pi
+                WHERE pi.product_id = o.product_id
+                ORDER BY pi.sort_order ASC, pi.id ASC
+                LIMIT 1) AS product_cover,
+               CASE WHEN o.buyer_id = #{userId} THEN s.nickname ELSE b.nickname END AS counterpart_name,
+               CASE WHEN o.buyer_id = #{userId} THEN s.avatar ELSE b.avatar END AS counterpart_avatar
+        FROM order_info o
+                 JOIN product p ON p.id = o.product_id
+                 JOIN `user` s ON s.id = o.seller_id
+                 JOIN `user` b ON b.id = o.buyer_id
+    </sql>
+
+    <select id="selectList" resultType="com.campus.trade.entity.OrderInfo">
+        <include refid="orderSelect"/>
+        WHERE (o.buyer_id = #{userId} OR o.seller_id = #{userId})
+        <if test="status != null">
+            AND o.status = #{status}
+        </if>
+        <if test="role == 'buyer'">
+            AND o.buyer_id = #{userId}
+        </if>
+        <if test="role == 'seller'">
+            AND o.seller_id = #{userId}
+        </if>
+        ORDER BY o.id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="countList" resultType="long">
+        SELECT COUNT(*) FROM order_info
+        WHERE (buyer_id = #{userId} OR seller_id = #{userId})
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="role == 'buyer'">
+            AND buyer_id = #{userId}
+        </if>
+        <if test="role == 'seller'">
+            AND seller_id = #{userId}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE order_info
+        <set>
+            status = #{status},
+            <if test="meetingTime != null">meeting_time = #{meetingTime},</if>
+            <if test="meetingPlace != null">meeting_place = #{meetingPlace},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="cancelActiveByProduct">
+        UPDATE order_info
+        SET status = 3
+        WHERE product_id = #{productId}
+          AND status IN (0, 1)
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </update>
+</mapper>

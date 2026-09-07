@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.trade.mapper.ProductImageMapper">
+
+    <insert id="insertBatch">
+        INSERT INTO product_image (product_id, image_url, sort_order) VALUES
+        <foreach collection="list" item="img" separator=",">
+            (#{img.productId}, #{img.imageUrl}, #{img.sortOrder})
+        </foreach>
+    </insert>
+
+    <select id="selectByProductId" resultType="com.campus.trade.entity.ProductImage">
+        SELECT * FROM product_image
+        WHERE product_id = #{productId}
+        ORDER BY sort_order ASC, id ASC
+    </select>
+
+    <delete id="deleteByProductId">
+        DELETE FROM product_image WHERE product_id = #{productId}
+    </delete>
+</mapper>
