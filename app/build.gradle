@@ -33,6 +33,20 @@ android {
     }
 }
 
+android {
+    lint {
+        // —— 以下关闭项均属“刻意为之”或误报，均已注明原因 ——
+        // Glide 库包含 NotificationTarget 字节码，但本应用不发送任何通知（误报）
+        disable 'NotificationPermission'
+        // 依赖版本按《开发文档.md》技术栈固定，不随新版提示升级
+        disable 'GradleDependency', 'AndroidGradlePluginVersion', 'NewerVersionAvailable'
+        // targetSdk 33 为文档约束（Android 12+ 兼容模式可接受）
+        disable 'OldTargetApi'
+        // 中文优先的课程原型：界面文案直接内联，不逐条抽资源
+        disable 'HardcodedText', 'SetTextI18n'
+    }
+}
+
 dependencies {
     // 基础 UI
     implementation libs.appcompat

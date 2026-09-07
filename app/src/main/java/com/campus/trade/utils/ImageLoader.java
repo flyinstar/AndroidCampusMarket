@@ -27,6 +27,7 @@ public final class ImageLoader {
     }
 
     /** 圆角图片（商品封面等） */
+    @SuppressWarnings("unchecked") // Glide 变换为泛型可变参数，属于已知非受检用法
     public static void loadRound(Context context, String url, ImageView imageView, int radiusDp) {
         Glide.with(context)
                 .load(url)

@@ -125,8 +125,8 @@ public class HomeFragment extends BaseFragment<HomeContract.View, HomePresenter>
 
     private void setSortUi(String sort) {
         boolean hot = "hot".equals(sort);
-        tvSortHot.setTextColor(getResources().getColor(hot ? R.color.primary : R.color.text_second));
-        tvSortNew.setTextColor(getResources().getColor(hot ? R.color.text_second : R.color.primary));
+        tvSortHot.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), hot ? R.color.primary : R.color.text_second));
+        tvSortNew.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), hot ? R.color.text_second : R.color.primary));
         tvSortHot.setTypeface(null, hot ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
         tvSortNew.setTypeface(null, hot ? android.graphics.Typeface.NORMAL : android.graphics.Typeface.BOLD);
     }

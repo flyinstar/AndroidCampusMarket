@@ -120,6 +120,7 @@ public class PublishActivity extends BaseActivity<PublishContract.View, PublishP
     }
 
     @Override
+    @SuppressWarnings("deprecation") // 图库多选走 onActivityResult，兼容 minSdk 23
     public void onAddImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -133,6 +134,7 @@ public class PublishActivity extends BaseActivity<PublishContract.View, PublishP
         mImageAdapter.removeAt(index);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

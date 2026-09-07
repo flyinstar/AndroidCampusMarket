@@ -79,7 +79,7 @@ public class OrdersActivity extends BaseActivity<OrderContract.View, OrderPresen
     }
 
     private void setStyle(TextView tv, boolean selected) {
-        tv.setTextColor(getResources().getColor(selected ? R.color.primary : R.color.text_second));
+        tv.setTextColor(androidx.core.content.ContextCompat.getColor(this, selected ? R.color.primary : R.color.text_second));
         tv.setTypeface(null, selected ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
     }
 

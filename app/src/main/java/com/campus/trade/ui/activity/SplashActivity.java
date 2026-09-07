@@ -1,5 +1,6 @@
 package com.campus.trade.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,8 +12,10 @@ import com.campus.trade.R;
 import com.campus.trade.utils.SharedPrefUtils;
 
 /**
- * 启动页：根据登录态跳转
+ * 启动页：根据登录态跳转。
+ * 自绘启动画面为有意的产品设计（minSdk 23，兼容 Android 12 以下系统）。
  */
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
     @Override

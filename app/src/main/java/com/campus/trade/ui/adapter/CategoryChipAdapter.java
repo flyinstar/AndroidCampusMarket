@@ -68,10 +68,10 @@ public class CategoryChipAdapter extends RecyclerView.Adapter<CategoryChipAdapte
         holder.tvName.setText(name);
         boolean selected = mSelectedId == category.getId();
         holder.tvName.setTextColor(selected
-                ? holder.itemView.getResources().getColor(R.color.primary)
-                : holder.itemView.getResources().getColor(R.color.text_second));
+                ? androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.primary)
+                : androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.text_second));
         holder.tvCircle.setTextColor(selected ? Color.WHITE
-                : holder.itemView.getResources().getColor(R.color.primary));
+                : androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.primary));
         holder.tvCircle.setBackgroundResource(selected ? R.drawable.bg_category_circle_selected
                 : R.drawable.bg_category_circle);
         holder.itemView.setOnClickListener(v -> {

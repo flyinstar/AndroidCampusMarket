@@ -68,14 +68,14 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.VH
         holder.tvStatus.setText(Product.statusText(product.getStatus()));
 
         if (product.getStatus() == Product.STATUS_ON) {
-            holder.tvStatus.setTextColor(holder.itemView.getResources().getColor(R.color.status_green));
+            holder.tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.status_green));
             holder.btnToggle.setText("下架");
         } else if (product.getStatus() == Product.STATUS_OFF) {
-            holder.tvStatus.setTextColor(holder.itemView.getResources().getColor(R.color.status_gray));
+            holder.tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.status_gray));
             holder.btnToggle.setText("重新上架");
         } else {
             // 已预约/已售出：不可手动上下架
-            holder.tvStatus.setTextColor(holder.itemView.getResources().getColor(R.color.status_orange));
+            holder.tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), R.color.status_orange));
             holder.btnToggle.setText("状态锁定");
             holder.btnToggle.setEnabled(false);
         }

@@ -76,7 +76,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.VH> {
                 : order.getStatus() == OrderInfo.STATUS_DONE ? R.color.status_green
                 : order.getStatus() == OrderInfo.STATUS_CANCELED ? R.color.status_gray
                 : R.color.status_blue;
-        holder.tvStatus.setTextColor(holder.itemView.getResources().getColor(statusColor));
+        holder.tvStatus.setTextColor(androidx.core.content.ContextCompat.getColor(holder.itemView.getContext(), statusColor));
 
         String role = isBuyer ? "我(买家)" : "我(卖家)";
         String counterpart = (isBuyer ? "卖家: " : "买家: ") + order.getCounterpartName();
