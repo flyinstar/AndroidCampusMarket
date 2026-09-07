@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    商品卡片（首页/收藏/商品列表双列网格）。
+    说明：封面图不能再用 “0dp + weight” 撑高 —— RecyclerView 以 wrap_content
+    测量网格项时没有可分配的多余高度，图片会被压成 0px。
+    这里用 ConstraintLayout + 1:1 比例，让封面高度 = 单元格宽度，图片始终可见。
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:background="@drawable/bg_card_round"
-    android:orientation="vertical">
+    android:background="@drawable/bg_card_round">
 
     <ImageView
         android:id="@+id/iv_cover"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="false"
         android:background="@drawable/bg_img_placeholder"
         android:contentDescription="商品图"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="8dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="8dp"
         android:textColor="@color/text_main"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_cover" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="8dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
 
         <TextView
             android:id="@+id/tv_price"
@@ -58,4 +73,4 @@
             android:textColor="@color/text_hint"
             android:textSize="11sp" />
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
