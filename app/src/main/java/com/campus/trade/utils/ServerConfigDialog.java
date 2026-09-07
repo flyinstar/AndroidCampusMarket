@@ -1,13 +1,14 @@
 package com.campus.trade.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.text.InputType;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
+import com.campus.trade.R;
 import com.campus.trade.network.ApiClient;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * 服务器地址设置对话框（入口在登录页）。
@@ -27,26 +28,22 @@ public final class ServerConfigDialog {
         if (context == null) {
             return;
         }
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        int pad = (int) (20 * context.getResources().getDisplayMetrics().density);
-        layout.setPadding(pad, 12, pad, 0);
-
-        final EditText etServer = new EditText(context);
-        etServer.setHint("例如 http://192.168.1.100:8080/");
-        etServer.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_server, null);
+        TextInputEditText etServer = view.findViewById(R.id.et_server_url);
         etServer.setText(ApiClient.getBaseUrl());
-        etServer.setSelectAllOnFocus(true);
-        layout.addView(etServer);
+        etServer.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                etServer.selectAll();
+            }
+        });
 
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle("服务器设置")
-                .setMessage("填写后端服务地址（以 http:// 或 https:// 开头）。\n"
-                        + "更换服务器后本地登录态将失效，需要重新登录该服务器的账号。")
-                .setView(layout)
+                .setView(view)
                 .setNeutralButton("恢复默认", (d, w) -> apply(context, ApiClient.DEFAULT_BASE_URL, listener))
                 .setNegativeButton("取消", null)
-                .setPositiveButton("保存", (d, w) -> apply(context, etServer.getText().toString(), listener))
+                .setPositiveButton("保存", (d, w) -> apply(context, etServer.getText() == null
+                        ? "" : etServer.getText().toString(), listener))
                 .show();
     }
 

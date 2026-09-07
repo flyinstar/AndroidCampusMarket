@@ -4,14 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatDialog;
 
 import com.campus.trade.R;
 import com.campus.trade.base.BaseFragment;
@@ -26,6 +22,8 @@ import com.campus.trade.ui.activity.OrdersActivity;
 import com.campus.trade.ui.activity.ProfileEditActivity;
 import com.campus.trade.utils.ImageLoader;
 import com.campus.trade.utils.SharedPrefUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * 我的页
@@ -102,27 +100,18 @@ public class ProfileFragment extends BaseFragment<ProfileContract.View, ProfileP
         if (ctx == null) {
             return;
         }
-        LinearLayout layout = new LinearLayout(ctx);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        int pad = (int) (24 * ctx.getResources().getDisplayMetrics().density);
-        layout.setPadding(pad, 12, pad, 0);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_change_password, null);
+        TextInputEditText etOld = view.findViewById(R.id.et_old_password);
+        TextInputEditText etNew = view.findViewById(R.id.et_new_password);
 
-        final EditText etOld = new EditText(ctx);
-        etOld.setHint("原密码");
-        etOld.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        final EditText etNew = new EditText(ctx);
-        etNew.setHint("新密码（至少6位）");
-        etNew.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        layout.addView(etOld);
-        layout.addView(etNew);
-
-        new AlertDialog.Builder(ctx)
+        new MaterialAlertDialogBuilder(ctx)
                 .setTitle("修改密码")
-                .setView(layout)
+                .setView(view)
                 .setNegativeButton("取消", null)
                 .setPositiveButton("确定", (d, w) ->
-                        mPresenter.changePassword(etOld.getText().toString(),
-                                etNew.getText().toString()))
+                        mPresenter.changePassword(etOld.getText() == null ? ""
+                                        : etOld.getText().toString(),
+                                etNew.getText() == null ? "" : etNew.getText().toString()))
                 .show();
     }
 
