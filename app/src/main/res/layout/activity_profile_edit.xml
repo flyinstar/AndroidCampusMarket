@@ -45,6 +45,51 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- 头像选择 -->
+            <LinearLayout
+                android:id="@+id/avatar_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_card_round"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:paddingBottom="16dp">
+
+                <FrameLayout
+                    android:layout_width="88dp"
+                    android:layout_height="88dp">
+
+                    <ImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
+                        android:background="@drawable/bg_avatar_round"
+                        android:contentDescription="头像"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/bg_camera_badge"
+                        android:contentDescription="更换头像"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_camera"
+                        android:tint="@color/primary" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="点击更换头像"
+                    android:textColor="@color/text_hint"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
