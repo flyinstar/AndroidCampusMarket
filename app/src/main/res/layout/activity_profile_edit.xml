@@ -78,7 +78,7 @@
                         android:contentDescription="更换头像"
                         android:padding="6dp"
                         android:src="@drawable/ic_camera"
-                        android:tint="@color/primary" />
+                        app:tint="@color/primary" />
                 </FrameLayout>
 
                 <TextView
